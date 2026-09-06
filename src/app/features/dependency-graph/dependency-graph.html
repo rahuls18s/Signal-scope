@@ -1,0 +1,13 @@
+<div class="graph" aria-label="Reactive dependency graph">
+  @for (level of levels(); track $index) {
+    <div class="level">
+      @for (node of level; track node.id) {
+        <button class="node" [class.selected]="node.id === selectedId()" [attr.data-kind]="node.kind" (click)="selectNode.emit(node.id)" [attr.aria-label]="'Inspect ' + node.name">
+          <span class="kind">{{node.kind}}</span><strong>{{node.name}}@if(node.kind !== 'Component'){()}</strong>
+          <code>{{node.value | value:28}}</code><small>{{node.updates}} updates · {{node.duration.toFixed(2)}} ms</small>
+        </button>
+      }
+      @if (!$last) { <span class="connector" aria-hidden="true">↓</span> }
+    </div>
+  }
+</div>
