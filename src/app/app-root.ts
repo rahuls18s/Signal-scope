@@ -1,5 +1,5 @@
 import { A11yModule, LiveAnnouncer } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, OnDestroy, computed, inject, linkedSignal, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, OnDestroy, computed, inject, linkedSignal, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { interval, map } from 'rxjs';
@@ -13,16 +13,17 @@ import { parseDebugSession } from './core/utils/session-codec';
 import { DependencyGraph } from './features/dependency-graph/dependency-graph';
 import { ValuePipe } from './shared/value.pipe';
 
-type View = 'workspace' | 'rxjs' | 'performance';
+type View = 'portfolio' | 'workspace' | 'rxjs' | 'performance';
 type TreeFilter = 'All' | NodeKind | 'Warnings' | 'Slow' | 'Frequently updated';
 type SignalInputType = 'number' | 'string' | 'boolean';
 
 @Component({ selector:'app-root', imports:[FormsModule,A11yModule,DependencyGraph,ValuePipe], templateUrl:'./app-root.html', styleUrl:'./app-root.scss', changeDetection:ChangeDetectionStrategy.OnPush })
-export class AppRoot implements OnDestroy {
+export class AppRoot implements AfterViewInit, OnDestroy {
   readonly engine=inject(ReactiveDebugEngine); readonly scenarios=inject(ScenarioService); readonly errors=inject(ErrorService);
-  private readonly sessions=inject(SessionStore); private readonly announcer=inject(LiveAnnouncer);
+  private readonly sessions=inject(SessionStore); private readonly announcer=inject(LiveAnnouncer); private readonly host:ElementRef<HTMLElement>=inject(ElementRef);
   private demoTimer?:ReturnType<typeof setInterval>; private replayTimer?:ReturnType<typeof setInterval>;
-  readonly view=signal<View>('workspace'); readonly search=signal(''); readonly eventSearch=signal(''); readonly kindFilter=signal<TreeFilter>('All');
+  readonly view=signal<View>('portfolio'); readonly search=signal(''); readonly eventSearch=signal(''); readonly kindFilter=signal<TreeFilter>('All');
+  readonly scrollProgress=signal(0);
   readonly newSignalOpen=signal(false); readonly newSignalName=signal('customValue'); readonly newSignalValue=signal('42'); readonly newSignalType=signal<SignalInputType>('number');
   readonly savedSessions=signal<DebugSession[]>([]); readonly isDemoRunning=signal(false);
   readonly clock=toSignal(interval(1000).pipe(map(()=>Date.now())),{initialValue:Date.now()});
@@ -35,7 +36,12 @@ export class AppRoot implements OnDestroy {
   readonly filters:TreeFilter[]=['All','Signal','Computed','Effect','Observable','Component','Slow','Frequently updated','Warnings'];
   readonly operators=['map','filter','debounceTime','distinctUntilChanged','switchMap','mergeMap','concatMap','exhaustMap','catchError','retry','shareReplay','combineLatest','forkJoin','bufferTime','throttleTime'];
   constructor(){this.scenarios.load('cart');void this.refreshSessions();}
+  ngAfterViewInit():void{this.observeReveals();this.updateScrollProgress();}
   ngOnDestroy():void{this.stopDemo();this.stopReplay();}
+  @HostListener('window:scroll') updateScrollProgress():void{const root=document.documentElement;const range=root.scrollHeight-root.clientHeight;this.scrollProgress.set(range>0?Math.min(100,Math.max(0,root.scrollTop/range*100)):0);}
+  setView(view:View):void{this.view.set(view);window.scrollTo({top:0,behavior:'smooth'});if(view==='portfolio')setTimeout(()=>this.observeReveals());}
+  openLab(view:Exclude<View,'portfolio'>='workspace'):void{this.view.set(view);window.scrollTo({top:0,behavior:'smooth'});}
+  moveHero(event:PointerEvent):void{const target=event.currentTarget as HTMLElement;const rect=target.getBoundingClientRect();const x=(event.clientX-rect.left)/rect.width-.5;const y=(event.clientY-rect.top)/rect.height-.5;target.style.setProperty('--mx',`${x*18}px`);target.style.setProperty('--my',`${y*14}px`);}
   selectScenario(id:string):void{this.stopDemo();this.scenarios.load(id as ScenarioId);this.view.set(id==='search'?'rxjs':'workspace');this.snapshotCursor.set(0);this.announce(`${id} scenario loaded`);}
   selectNode(id:string):void{this.engine.selectedId.set(id);}
   updateSelected(raw:string):void{const node=this.engine.selected();if(!node)return;let value:DebugValue=raw;if(typeof node.value==='number')value=Number(raw);if(typeof node.value==='boolean')value=raw==='true';try{this.engine.write(node.id,value);this.announce(`${node.name} updated`);}catch(error){this.errors.report(error);}}
@@ -56,4 +62,5 @@ export class AppRoot implements OnDestroy {
   consumers(){const node=this.engine.selected();return node?this.engine.consumers(node):[];}
   private async refreshSessions():Promise<void>{try{this.savedSessions.set(await this.sessions.list());}catch(error){this.errors.report(error);}}
   private announce(message:string):void{void this.announcer.announce(message);}
+  private observeReveals():void{const elements=this.host.nativeElement.querySelectorAll<HTMLElement>('[data-reveal]');if(!('IntersectionObserver' in window)){elements.forEach(el=>el.classList.add('is-visible'));return;}const observer=new IntersectionObserver(entries=>{for(const entry of entries){if(entry.isIntersecting){(entry.target as HTMLElement).classList.add('is-visible');observer.unobserve(entry.target);}}},{threshold:.16,rootMargin:'0px 0px -8%'});elements.forEach(el=>observer.observe(el));}
 }

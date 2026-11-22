@@ -1,5 +1,74 @@
+@if(view()==='portfolio'){
+<div class="portfolio-progress" aria-hidden="true"><i [style.width.%]="scrollProgress()"></i></div>
+<header class="portfolio-nav">
+  <a class="portfolio-mark" href="#top" aria-label="Rahul portfolio home"><span>RS</span><strong>Rahul S.</strong></a>
+  <nav aria-label="Portfolio navigation"><a href="#work">Work</a><a href="#craft">Craft</a><a href="#about">About</a></nav>
+  <button class="nav-launch" (click)="openLab()">Open SignalScope <span>↗</span></button>
+</header>
+<main class="portfolio-shell">
+  <section id="top" class="portfolio-hero" (pointermove)="moveHero($event)">
+    <div class="hero-grid" aria-hidden="true"></div><div class="hero-glow hero-glow-a" aria-hidden="true"></div><div class="hero-glow hero-glow-b" aria-hidden="true"></div>
+    <div class="hero-copy" data-reveal>
+      <p class="portfolio-kicker"><i></i> Angular engineer · reactive product UI</p>
+      <h1>I build interfaces<br>that stay <em>clear</em><br><span>under pressure.</span></h1>
+      <p class="hero-lede">I turn complex product flows into fast, maintainable Angular experiences—then build tools that make the system easier to understand.</p>
+      <div class="hero-actions"><button class="lime-button" (click)="openLab()">Explore SignalScope <span>↗</span></button><a class="text-link" href="#work">See selected work <span>↓</span></a></div>
+      <div class="hero-proof" aria-label="Core capabilities"><span><small>01</small>Angular product UI</span><span><small>02</small>Signals + RxJS</span><span><small>03</small>Java / Spring labs</span></div>
+    </div>
+    <div class="hero-stage" data-reveal>
+      <div class="stage-halo" aria-hidden="true"></div>
+      <div class="media-orb">
+        <video autoplay muted loop playsinline preload="metadata" poster="/media/orbit-hand-poster.webp" aria-label="Glowing hand surrounded by orbiting technology symbols">
+          <source src="/media/orbit-hand.webm" type="video/webm">
+        </video>
+        <span class="video-shade" aria-hidden="true"></span>
+      </div>
+      <div class="orbit orbit-one" aria-hidden="true"><span class="tech-chip chip-angular">A</span><span class="tech-chip chip-rx">Rx</span><span class="tech-chip chip-ts">TS</span></div>
+      <div class="orbit orbit-two" aria-hidden="true"><span class="tech-chip chip-java">J</span><span class="tech-chip chip-api">API</span><span class="tech-chip chip-signal">ϟ</span></div>
+      <div class="stage-caption"><span>Interactive system</span><strong>Move · scroll · explore</strong></div>
+    </div>
+    <a class="scroll-cue" href="#work"><span></span>Scroll to enter</a>
+  </section>
+
+  <section class="signal-marquee" aria-label="Technology focus"><div><span>ANGULAR</span><i>✦</i><span>TYPESCRIPT</span><i>✦</i><span>RXJS</span><i>✦</i><span>SIGNALS</span><i>✦</i><span>ACCESSIBLE UI</span><i>✦</i><span>JAVA</span><i>✦</i><span>SPRING BOOT</span><i>✦</i><span>ANGULAR</span><i>✦</i><span>TYPESCRIPT</span><i>✦</i><span>RXJS</span></div></section>
+
+  <section id="work" class="portfolio-section work-section">
+    <div class="section-heading" data-reveal><p class="portfolio-kicker"><i></i> Featured build · 2026</p><h2>Reactive state,<br><em>made visible.</em></h2><p>SignalScope turns Angular Signals and RxJS flows into an interactive map you can inspect, replay, and reason about.</p></div>
+    <article class="project-stage" data-reveal>
+      <div class="project-bar"><span><i></i><i></i><i></i></span><code>signalscope / reactive-map</code><button (click)="openLab()">Launch live build ↗</button></div>
+      <div class="project-canvas">
+        <div class="graph-noise" aria-hidden="true"></div>
+        <svg class="graph-lines" viewBox="0 0 1000 520" preserveAspectRatio="none" aria-hidden="true"><path d="M90 290 C230 290 210 120 390 120 S570 220 690 220"/><path d="M90 290 C250 290 280 400 460 400 S560 300 690 300"/><path d="M690 220 C780 220 760 150 900 150"/><path d="M690 300 C800 300 790 390 910 390"/></svg>
+        <div class="graph-node source"><small>SIGNAL</small><strong>cartItems()</strong><span>[3 items]</span></div>
+        <div class="graph-node compute one"><small>COMPUTED</small><strong>subtotal()</strong><span>₹ 2,490</span></div>
+        <div class="graph-node compute two"><small>COMPUTED</small><strong>total()</strong><span>₹ 2,116</span></div>
+        <div class="graph-node effect"><small>EFFECT</small><strong>syncCart()</strong><span>0.42 ms</span></div>
+        <div class="graph-pulse" aria-hidden="true"></div>
+      </div>
+      <div class="project-footer"><div><span>Angular 22</span><span>Signals</span><span>RxJS</span><span>IndexedDB</span></div><p>Built as a truthful, public-API instrumentation playground—no hidden framework internals.</p></div>
+    </article>
+    <div class="project-facts" data-reveal><article><small>01 / VISUALIZE</small><h3>See dependency flow</h3><p>Trace source signals, computed values, effects, and their consumers in one live graph.</p></article><article><small>02 / REPLAY</small><h3>Travel through state</h3><p>Capture snapshots, restore values, and replay a reactive sequence frame by frame.</p></article><article><small>03 / PROFILE</small><h3>Find expensive paths</h3><p>Surface update counts, execution timing, unchanged calculations, and possible cycles.</p></article></div>
+  </section>
+
+  <section id="craft" class="portfolio-section craft-section">
+    <div class="section-heading compact" data-reveal><p class="portfolio-kicker"><i></i> How I build</p><h2>One system.<br><em>Three lenses.</em></h2></div>
+    <div class="craft-grid">
+      <article class="craft-card card-product" data-reveal><span class="card-index">01</span><div class="craft-visual"><span></span><span></span><span></span><i></i></div><p class="card-label">PRODUCT INTERFACES</p><h3>Clear flows for real users.</h3><p>I build Angular screens for travel software with reusable components, careful states, and accessible interaction.</p><div class="card-tags"><span>Angular</span><span>TypeScript</span><span>UI systems</span></div></article>
+      <article class="craft-card card-reactive" data-reveal><span class="card-index">02</span><div class="craft-visual reactive-rings"><i></i><i></i><i></i><strong>ϟ</strong></div><p class="card-label">REACTIVE ARCHITECTURE</p><h3>State you can reason about.</h3><p>I use Signals for synchronous UI state and RxJS where time, cancellation, and async events matter.</p><div class="card-tags"><span>Signals</span><span>RxJS</span><span>Performance</span></div></article>
+      <article class="craft-card card-backend" data-reveal><span class="card-index">03</span><div class="craft-visual code-window"><small>POST /api/trips</small><code>&#123; status: "created" &#125;</code><i></i></div><p class="card-label">BACKEND LABS</p><h3>Full-stack thinking.</h3><p>I explore Java and Spring Boot through focused demos, keeping production Angular work and backend learning clearly distinguished.</p><div class="card-tags"><span>Java</span><span>Spring Boot</span><span>REST</span></div></article>
+    </div>
+  </section>
+
+  <section id="about" class="portfolio-section about-section">
+    <div class="about-orb" aria-hidden="true"><span></span><i></i><i></i><i></i></div>
+    <div class="about-copy" data-reveal><p class="portfolio-kicker"><i></i> About Rahul</p><h2>Building the interface.<br><em>Understanding the system.</em></h2><p>I’m a software engineer focused on Angular and reactive frontend architecture. My day-to-day work is in travel software; my side projects explore developer tooling and Java/Spring Boot patterns.</p><div class="about-actions"><button class="lime-button" (click)="openLab()">Try the live project <span>↗</span></button><a href="https://github.com/rahuls18s/Signal-scope" target="_blank" rel="noopener">View source on GitHub ↗</a></div></div>
+  </section>
+
+  <footer class="portfolio-footer"><span>Rahul S. · Angular engineer</span><span>Designed as a reactive system · 2026</span><a href="#top">Back to top ↑</a></footer>
+</main>
+} @else {
 <header class="app-header">
-  <a class="brand" href="/" aria-label="SignalScope home"><span class="brand-icon">ϟ</span>SignalScope<span class="version">DEVTOOLS</span></a>
+  <button class="brand brand-button" (click)="setView('portfolio')" aria-label="Return to Rahul portfolio"><span class="brand-icon">ϟ</span>SignalScope<span class="version">DEVTOOLS</span></button>
   <nav aria-label="Primary navigation"><button [class.active]="view()==='workspace'" (click)="view.set('workspace')">Workspace</button><button [class.active]="view()==='rxjs'" (click)="view.set('rxjs')">RxJS lab</button><button [class.active]="view()==='performance'" (click)="view.set('performance')">Performance</button></nav>
   <div class="header-actions"><span class="connection"><i></i>{{formatTime(clock()).slice(0,8)}} · local</span><button class="primary" (click)="runDemo()" [disabled]="isDemoRunning()">{{isDemoRunning() ? 'Running…' : '▶ Run demo'}}</button></div>
 </header>
@@ -23,3 +92,4 @@
   <section class="session-drawer panel"><div><span class="eyebrow">INDEXEDDB</span><h2>Saved sessions</h2></div><div class="saved-list">@for(session of savedSessions();track session.id){<span><button (click)="loadSession(session)">{{session.name}}</button><button aria-label="Delete session" (click)="deleteSession(session.id)">×</button></span>}@empty{<span class="muted">No saved sessions on this device.</span>}</div></section>
   <p class="disclosure"><strong>Instrumentation boundary:</strong> Angular executes the Signals, computed values, effects, and templates shown here. SignalScope records values, declared dependencies, and timing through its own wrappers using supported public APIs; it does not inspect undocumented Angular internals.</p>
 </main>
+}
